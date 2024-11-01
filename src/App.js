@@ -1,7 +1,72 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import React, { useState, useEffect } from "react";
 
 function App() {
+  const [test, setTest] = useState(false);
+  const [jsontest, setJsontest] = useState(false);
+
+  const toggleTest = () => {
+    setTest(!test);
+    setJsontest(!jsontest);
+  };
+
+  const consoleAndAlert = (e) => {
+    console.log(e);
+    //alert(e);
+  };
+
+  useEffect(() => {
+    const foa = document.getElementsByClassName("testDiv");
+    const foa2 = document.querySelector(".App-link");
+    consoleAndAlert(foa);
+    consoleAndAlert(foa2);
+  }, [test]);
+
+  //==============================================================================================
+  //JSON
+  // JSON parse -> dữ liệu thuần.
+  // Dữ liệu thuần -> stringify -> JSON.
+  //Khi làm FE, từ API -> JSON -> parse ra thành dữ liệu thực sự.
+  useEffect(() => {
+    //parse
+    var a = "1";
+    var JSONtoNumber = JSON.parse(a);
+    var b = '"this is a string"';
+    var JSONtoString = JSON.parse(b);
+
+    var c = 1;
+    var numberToJSON = JSON.stringify(c);
+    var obj = {
+      name: "Bang",
+      age: 20,
+      address: "who knows?",
+    };
+    var objectToJSON = JSON.stringify(obj);
+
+    console.log("type: ", typeof JSONtoNumber, JSONtoNumber);
+    console.log("type: ", typeof JSONtoString, JSONtoString);
+    console.log("type: ", typeof numberToJSON, numberToJSON);
+    console.log("type: ", typeof objectToJSON, objectToJSON);
+  }, [jsontest]);
+  //==============================================================================================
+
+  //Sync / Async
+
+  //Trong JS, cơ bản code chạy bằng đồng bộ (sync), nghĩa là single thread.
+  //Khi compile code sẽ chạy từ trên xuống.
+
+  //Nhưng có những trường hợp bất đồng bộ, ví dụ:
+  //(setTimeout(1000){ consolelog(a)) };
+  //consolelog(b);
+
+  //Khi đó b sẽ in ra trước -> Nghĩa là có một thread khác đang giám sát setTimeout của a -> async.
+
+  //Async: fetch, setTimeout, setInterval, XMLHttpRequest...
+  //Khi đó, Js sẽ có callback (để báo lại khi các async function chạy xong, ví dụ, fetch xong API...)
+
+  //==============================================================================================
+
   return (
     <div className="App">
       <header className="App-header">
@@ -18,6 +83,18 @@ function App() {
           Learn React
         </a>
       </header>
+      <div className="test">
+        <p className="testP"> foaiefiewjfw </p>
+        <div className="testDiv">
+          <div className="div1"> div 1</div>
+          <div className="div2"> div 2</div>
+        </div>
+        <div className="testDiv">
+          <div className="div1"> div 1</div>
+          <div className="div2"> div 2</div>
+        </div>
+      </div>
+      <button onClick={toggleTest}>test</button>
     </div>
   );
 }
