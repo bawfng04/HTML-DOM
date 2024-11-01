@@ -155,6 +155,11 @@ function App() {
   Promise.all([promiseA, promiseB, promiseC])
     .then((results) => {
       console.log(results); // ["Promise A resolved", "Promise B resolved", "Promise C resolved"]
+      //giả sử PromiseA mất 2s, PromiseB Mất 3s, PromiseC mất 2s, thì tổng
+      //thời gian khi chạy bình thường sẽ mất 7s
+      //Nhưng khi dùng Promise.all -> Chạy song song -> Chỉ mất 3s.
+      //Dùng khi các Promise không phụ thuộc lẫn nhau, nhưng cần kết hợp kết quả
+      //để làm gì đó
     })
     .catch((error) => {
       console.log(error);
@@ -162,9 +167,9 @@ function App() {
 
   //==============================================================================================
   //Promise chain
-  //Khi bạn có một Promise và gọi resolve(data), thì hàm callback trong nhánh .then() đầu tiên sẽ nhận được data đó làm tham số.
+  //Khi có một Promise và gọi resolve(data), thì hàm callback trong nhánh .then() đầu tiên sẽ nhận được data đó làm tham số.
   //Sau đó:
-  // Nhánh .then() đầu tiên xử lý data và có thể trả về một giá trị mới (bằng cách sử dụng return).
+  // Nhánh .then() đầu tiên xử lý data (trong resolve) và có thể trả về một giá trị mới (bằng cách sử dụng return).
   // Nhánh .then() thứ hai sẽ nhận được giá trị mà nhánh .then() trước đó trả về.
   // Quá trình này tiếp tục cho các nhánh .then() tiếp theo,
 
@@ -196,6 +201,52 @@ function App() {
   // promiseChain:  1
   // promiseChain: 2;
   // promiseChain: 3;
+
+  //another ví dụ về chain:
+  new Promise(function (resolve, reject) {
+    resolve("Initial Data");
+  })
+    .then(function (data) {
+      console.log("First then:", data); // "Initial Data"
+      return "Data from first then";
+    })
+    .then(function (data) {
+      console.log("Second then:", data); // "Data from first then"
+      return "Data from second then";
+    })
+    .then(function (data) {
+      console.log("Third then:", data); // "Data from second then"
+    });
+
+  //another promise chain
+  function sleep(ms) {
+    return new Promise(function (resolve) {
+      setTimeout(resolve, ms);
+    });
+  }
+
+  sleep(1000)
+    .then(function () {
+      console.log("sleep: 1");
+      return sleep(5000);
+    })
+    .then(function () {
+      console.log("sleep: 2"); //
+      //ví dụ: Khi return về một promise bị reject, thì sẽ nhảy vào catch (*) ngay lập tức.
+      //return new Promise(function(resolve, reject) { reject("error"); });
+      return sleep(5000);
+    })
+    .then(function () {
+      console.log("sleep: 3");
+      return sleep(5000);
+    })
+    .catch((error) => {
+      //(*)
+      console.log("sleep error:", error);
+    });
+  //https://www.youtube.com/watch?v=pxyxbaq8i8c&list=PL_-VfJajZj0VgpFpEVFzS5Z-lkXtBe-x5&index=92
+
+  //sleep: 1 (5s) -> sleep: 2 (5s) -> sleep: 3 (5s);
 
   //==============================================================================================
 
