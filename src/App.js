@@ -84,6 +84,80 @@ function App() {
       console.log("finallyyyyyyyyyy");
     });
 
+  //ví dụ về promise:
+  function fetchData() {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const success = true; // Thay đổi giá trị này để kiểm tra các trường hợp khác nhau
+        if (success) {
+          resolve("Data fetched successfully");
+        } else {
+          reject("Error fetching data");
+        }
+      }, 1000);
+    });
+  }
+
+  fetchData()
+    .then((message) => {
+      console.log(message);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
+  //Tạo hai Promise, promise1 và promise2. promise2 chỉ được thực thi sau khi promise1 hoàn thành. In ra kết quả của cả hai Promise.
+  const promise1 = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve("Promise 1 resolved");
+    }, 1000);
+  });
+
+  const promise2 = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve("Promise 2 resolved");
+    }, 2000);
+  });
+
+  promise1
+    .then((result1) => {
+      console.log(result1);
+      return promise2;
+    })
+    .then((result2) => {
+      console.log(result2);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
+  //Tạo ba Promise, promiseA, promiseB, và promiseC. Sử dụng Promise.all để đợi tất cả các Promise hoàn thành và in ra kết quả của chúng.
+  const promiseA = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve("Promise A resolved");
+    }, 1000);
+  });
+
+  const promiseB = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve("Promise B resolved");
+    }, 2000);
+  });
+
+  const promiseC = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve("Promise C resolved");
+    }, 3000);
+  });
+
+  Promise.all([promiseA, promiseB, promiseC])
+    .then((results) => {
+      console.log(results); // ["Promise A resolved", "Promise B resolved", "Promise C resolved"]
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
   //==============================================================================================
 
   //test commit
