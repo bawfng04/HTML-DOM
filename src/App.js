@@ -65,6 +65,7 @@ function App() {
   //Async: fetch, setTimeout, setInterval, XMLHttpRequest...
   //Khi đó, Js sẽ có callback (để báo lại khi các async function chạy xong, ví dụ, fetch xong API...)
   //Callback hell: Khi điều kiện chạy của function này phụ thuộc vào function khác, lồng vào nhau liên tục...
+  //Mỗi promise chỉ có thể là resolve hoặc reject, không được có cả 2
 
   var PromiseAAA = new Promise(function (resolve, reject) {
     //resolve(): Khi gọi thành công //then - finally
@@ -72,6 +73,7 @@ function App() {
     //cả khi gọi resolve lẫn reject đều sẽ chạy lần lượt ở then và catch, sau đó finally sẽ luôn có
     reject("something"); // -> failllllllllllllll something // finallyyyyyyyyyy
     resolve("somethingg"); // -> thanh congggggggggg somethingg // finallyyyyyyyyyy
+    ////Lệnh này sẽ không có hiệu quả vì Promise đã được resolved trước đó. Một Promise chỉ có thể được resolved hoặc rejected một lần.
   });
 
   PromiseAAA.then(function (e) {
@@ -157,6 +159,43 @@ function App() {
     .catch((error) => {
       console.log(error);
     });
+
+  //==============================================================================================
+  //Promise chain
+  //Khi bạn có một Promise và gọi resolve(data), thì hàm callback trong nhánh .then() đầu tiên sẽ nhận được data đó làm tham số.
+  //Sau đó:
+  // Nhánh .then() đầu tiên xử lý data và có thể trả về một giá trị mới (bằng cách sử dụng return).
+  // Nhánh .then() thứ hai sẽ nhận được giá trị mà nhánh .then() trước đó trả về.
+  // Quá trình này tiếp tục cho các nhánh .then() tiếp theo,
+
+  const promiseChain = new Promise(function (resolve, reject) {
+    resolve("chain resolve");
+    reject("chain reject"); //Lệnh này sẽ không có hiệu quả vì Promise đã được resolved trước đó. Một Promise chỉ có thể được resolved hoặc rejected một lần.
+  });
+
+  promiseChain
+    .then(function () {
+      return 1;
+    })
+    .then(function (data) {
+      console.log("promiseChain: ", data); //Nhận data là 1 từ lần .then() trước -> In ra promiseChain: 1.
+      return 2;
+    })
+    .then(function (data) {
+      console.log("promiseChain: ", data); //Nhận data là 2 -> In ra promiseChain: 2.
+      return 3;
+    })
+    .then(function (data) {
+      console.log("promiseChain: ", data);
+    })
+    //Mỗi lần .then() nhận giá trị trả về từ lần trước, cho phép xử lý tuần tự các giá trị.
+    .catch(function (error) {
+      console.log("promiseChain error:", error);
+    });
+
+  // promiseChain:  1
+  // promiseChain: 2;
+  // promiseChain: 3;
 
   //==============================================================================================
 
