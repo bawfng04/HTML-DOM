@@ -51,7 +51,7 @@ function App() {
   }, [jsontest]);
   //==============================================================================================
 
-  //Sync / Async
+  //Sync / Async / Promise
 
   //Trong JS, cơ bản code chạy bằng đồng bộ (sync), nghĩa là single thread.
   //Khi compile code sẽ chạy từ trên xuống.
@@ -64,6 +64,25 @@ function App() {
 
   //Async: fetch, setTimeout, setInterval, XMLHttpRequest...
   //Khi đó, Js sẽ có callback (để báo lại khi các async function chạy xong, ví dụ, fetch xong API...)
+  //Callback hell: Khi điều kiện chạy của function này phụ thuộc vào function khác, lồng vào nhau liên tục...
+
+  var PromiseAAA = new Promise(function (resolve, reject) {
+    //resolve(): Khi gọi thành công //then - finally
+    //reject(): Khi gọi thất bại    //catch - finally
+    //cả khi gọi resolve lẫn reject đều sẽ chạy lần lượt ở then và catch, sau đó finally sẽ luôn có
+    reject("something"); // -> failllllllllllllll something // finallyyyyyyyyyy
+    resolve("somethingg"); // -> thanh congggggggggg somethingg // finallyyyyyyyyyy
+  });
+
+  PromiseAAA.then(function (e) {
+    console.log("thanh congggggggggg", e);
+  })
+    .catch(function (e) {
+      console.log("failllllllllllllll", e);
+    })
+    .finally(function () {
+      console.log("finallyyyyyyyyyy");
+    });
 
   //==============================================================================================
 
