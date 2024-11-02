@@ -382,10 +382,25 @@ function App() {
   useEffect(() => {
     console.log("commentData: =======", commentData);
   }, [commentData]);
+  console.log("🚀 ~ App ~ commentData:", commentData);
 
   useEffect(() => {
     console.log("nameeeeeeees: ", test1);
   }, [test1]);
+
+  //==============================================================================================
+
+  fetch("http://localhost:3000/data")
+    .then((res) => res.json())
+    .then((data) => {
+      console.log("dataaaaaaaa ", data);
+    });
+
+  //cần vào json-server để npm start tạo API
+
+  //==============================================================================================
+
+  //==============================================================================================
 
   //==============================================================================================
 
@@ -396,7 +411,7 @@ function App() {
 
   return (
     <div className="App">
-      <div id="commentBlock"></div>
+      <div id="commentBlock" className="commentBlock"></div>
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
