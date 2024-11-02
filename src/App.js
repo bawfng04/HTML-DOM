@@ -6,6 +6,7 @@ function App() {
   const [test, setTest] = useState(false);
   const [jsontest, setJsontest] = useState(false);
   const [commentData, setCommentData] = useState([]);
+  const [test1, setTest1] = useState([]);
 
   const toggleTest = () => {
     setTest(!test);
@@ -347,10 +348,31 @@ function App() {
     .then((response) => response.json())
     .then((json) => console.log("Fetched::: ", json));
 
+  //another fetch: Comment data
   useEffect(() => {
     fetch("https://jsonplaceholder.typicode.com/comments")
-      .then((res) => res.json())
-      .then((data) => setCommentData(data))
+      .then((res) => res.json()) //JSON.parse()
+      .then((data) => {
+        setCommentData(data);
+        //names: ["312321", "f23hguugfe", ...]
+        var names = data.map((unit) => {
+          //lay het name trong API
+          return unit.name;
+        });
+
+        setTest1(names);
+
+        //in ra trong web
+        var printNames = data.map((unit) => {
+          return `<h4>
+            <p>${unit.email}</p>
+            <p>${unit.body}</p>
+          </h4>`;
+        });
+
+        var printContent = printNames.join("");
+        document.getElementById("printNameDiv").innerHTML = printContent;
+      })
       .catch((error) => {
         console.log(error);
       });
@@ -360,6 +382,10 @@ function App() {
   useEffect(() => {
     console.log("commentData: =======", commentData);
   }, [commentData]);
+
+  useEffect(() => {
+    console.log("nameeeeeeees: ", test1);
+  }, [test1]);
 
   //==============================================================================================
 
@@ -397,6 +423,8 @@ function App() {
         </div>
       </div>
       <button onClick={toggleTest}>test</button>
+
+      <div id="printNameDiv"></div>
     </div>
   );
 }
