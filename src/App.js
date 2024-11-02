@@ -250,6 +250,89 @@ function App() {
 
   //==============================================================================================
 
+  //Promise in realworld (comments)
+
+  //lay comment, tu comment -> lay userId -> tu userId lay ra usermame
+  var users = [
+    {
+      id: 1,
+      name: "Nguyen Van A",
+      userName: "A2004",
+    },
+    {
+      id: 2,
+      name: "Nguyen Thi B",
+      userName: "B0322",
+    },
+    {
+      id: 3,
+      name: "Nguyen Thi C",
+      userName: "C032232",
+    },
+  ];
+
+  var comments = [
+    {
+      id: 1,
+      userId: 1,
+      content: "Tai sao GPU lai khong nho nhu CPU nhi??",
+    },
+    {
+      id: 2,
+      userId: 2,
+      content: "Tai vi may bi ngu!!",
+    },
+  ];
+
+  function getComment() {
+    return new Promise(function (resolve) {
+      setTimeout(function () {
+        resolve(comments);
+      }, 1000);
+    });
+  }
+
+  function getUsersByIds(userIds) {
+    //truyền vào getUsersByIds một mảng, và kết quả trả về sẽ là các user tương ứng (cũng là mảng)
+    return new Promise(function (resolve) {
+      //lấy ra user từ userIDs
+      var commentedUsers = users.filter(function (user) {
+        return userIds.includes(user.id);
+      });
+      resolve(commentedUsers);
+    });
+  }
+
+  getComment()
+    .then(function (comments) {
+      var userIDs = comments.map((comment) => {
+        //userIDs là một mảng, ví dụ: [1, 2].
+        return comment.id; //print the userID list
+      });
+      //lấy user bằng mảng userIDs
+      return getUsersByIds(userIDs).then(function (users) {
+        console.log("result: ", users);
+        return {
+          users: users,
+          comments: comments,
+        };
+      });
+    })
+    .then(function (data) {
+      //render ra bang html
+      var commentBlock = document.getElementById("commentBlock");
+      var html = "";
+      data.comments.forEach(function (comment) {
+        var user = data.users.find(function (user) {
+          return user.id === comment.userId;
+        });
+        html += `<li>${user.name}: ${comment.content}</li>`;
+      });
+      commentBlock.innerHTML = html;
+    });
+
+  //==============================================================================================
+
   //test commit
   //git add .
   //git commit -m ""
@@ -257,6 +340,7 @@ function App() {
 
   return (
     <div className="App">
+      <div id="commentBlock"></div>
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
