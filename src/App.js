@@ -5,6 +5,7 @@ import React, { useState, useEffect } from "react";
 function App() {
   const [test, setTest] = useState(false);
   const [jsontest, setJsontest] = useState(false);
+  const [commentData, setCommentData] = useState([]);
 
   const toggleTest = () => {
     setTest(!test);
@@ -293,6 +294,7 @@ function App() {
   }
 
   function getUsersByIds(userIds) {
+    //userIds ex: [1, 2, ...]
     //truyền vào getUsersByIds một mảng, và kết quả trả về sẽ là các user tương ứng (cũng là mảng)
     return new Promise(function (resolve) {
       //lấy ra user từ userIDs
@@ -319,17 +321,45 @@ function App() {
       });
     })
     .then(function (data) {
+      //data:
+      // {
+      //   users: users,
+      //   comments: comments,
+      // }
+
       //render ra bang html
       var commentBlock = document.getElementById("commentBlock");
       var html = "";
       data.comments.forEach(function (comment) {
         var user = data.users.find(function (user) {
-          return user.id === comment.userId;
+          return user.id === comment.userId; //tìm user có id trùng với comment
         });
         html += `<li>${user.name}: ${comment.content}</li>`;
       });
       commentBlock.innerHTML = html;
     });
+
+  //==============================================================================================
+
+  //fetch
+  //example
+  fetch("https://jsonplaceholder.typicode.com/todos/1")
+    .then((response) => response.json())
+    .then((json) => console.log("Fetched::: ", json));
+
+  useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/comments")
+      .then((res) => res.json())
+      .then((data) => setCommentData(data))
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  //bất đồng bộ -> cần useEffect mới để chạy sau khi fetch.
+  useEffect(() => {
+    console.log("commentData: =======", commentData);
+  }, [commentData]);
 
   //==============================================================================================
 
