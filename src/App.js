@@ -390,15 +390,38 @@ function App() {
 
   //==============================================================================================
 
-  fetch("http://localhost:3000/data")
+  fetch("http://localhost:5200/data")
     .then((res) => res.json())
     .then((data) => {
       console.log("dataaaaaaaa ", data);
-    });
+    })
+    .catch((error) => console.log("error: ", error));
 
   //cần vào json-server để npm start tạo API
 
   //==============================================================================================
+
+  //ví dụ: Fetch danh sách example2.json
+
+  var exampleAPI = "http://localhost:5200/data";
+
+  function callAPI() {
+    fetch(exampleAPI)
+      .then((json) => json.json())
+      .then((data) => {
+        renderPeople(data);
+      });
+  }
+
+  function renderPeople(data) {
+    var peopleList = document.getElementById("fetchExample2");
+    var htmlss = data.map((people) => {
+      return `<li> ${people.name} - ${people.score} </li>`;
+    });
+    peopleList.innerHTML = htmlss.join("");
+  }
+
+  callAPI();
 
   //==============================================================================================
 
@@ -411,6 +434,7 @@ function App() {
 
   return (
     <div className="App">
+      <div id="fetchExample2"></div>
       <div id="commentBlock" className="commentBlock"></div>
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
